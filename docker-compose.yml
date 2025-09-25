@@ -1,7 +1,7 @@
 # Script Name: docker-compose.yml
 # Author: Amr
-# Date of Creation: 2025-09-25
-# Description: Compose file to run PostgreSQL with pgvector.
+# Date: 2025-09-25
+# Description: Compose setup for PostgreSQL (pgvector), MySQL, and Trino
 
 version: '3.9'
 
@@ -9,6 +9,7 @@ services:
   postgres:
     build:
       context: ./docker
+      dockerfile: Dockerfile.postgres
     container_name: pgvector_lab
     environment:
       POSTGRES_USER: admin
@@ -19,5 +20,26 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_lab
+    environment:
+      MYSQL_ROOT_PASSWORD: redhat123
+      MYSQL_DATABASE: telecom
+    ports:
+      - "3306:3306"
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - mysqldata:/var/lib/mysql
+
+  trino:
+    image: trinodb/trino:latest
+    container_name: trino_lab
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./docker/trino-catalogs:/etc/trino/catalog
+
 volumes:
   pgdata:
+  mysqldata:
