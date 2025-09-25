@@ -1,0 +1,23 @@
+# Script Name: docker-compose.yml
+# Author: Amr
+# Date of Creation: 2025-09-25
+# Description: Compose file to run PostgreSQL with pgvector.
+
+version: '3.9'
+
+services:
+  postgres:
+    build:
+      context: ./docker
+    container_name: pgvector_lab
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: redhat123
+      POSTGRES_DB: vectordb
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
